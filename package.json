@@ -1,0 +1,24 @@
+{
+  "name": "chronos-api",
+  "version": "1.0.0",
+  "description": "A rest api for chronos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "express",
+    "mysql",
+    "nodemon"
+  ],
+  "author": "Juan Manuel Cruz Ortiz",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
