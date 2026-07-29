@@ -1,5 +1,6 @@
 import express from "express"
 import { db } from "./config/db.js"
+import "./models/index.js"
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.get('/', (req, res) => {
 
 try {
     await db.authenticate()
+    db.sync()
     console.log('Connection has been established successfully.')
 } catch (error) {
     console.log(error)
