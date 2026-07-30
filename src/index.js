@@ -1,14 +1,17 @@
 import express from "express"
 import { db } from "./config/db.js"
 import "./models/index.js"
+import authRouter from './router/authRoutes.js'
+import eventRouter from './router/eventRoutes.js'
 
 const app = express()
 
 const PORT = 3000
 
-app.get('/', (req, res) => {
-    res.send('Hola mundo')
-})
+app.use(express.json())
+
+app.use("/v1/auth", authRouter)
+app.use("/v1/events", eventRouter)
 
 try {
     await db.authenticate()
