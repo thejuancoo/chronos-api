@@ -1,11 +1,11 @@
 import jwt from 'jsonwebtoken'
-import User from '../models/index.js'
+import { User } from '../models/index.js'
 
 const checkAuth = async (req, res, next) => {
     try {
         const authHeader = req.headers.authorization
 
-        if(!authHeader || authHeader.startsWith('Bearer ')){
+        if(!authHeader || !authHeader.startsWith('Bearer ')){
             return res.status(401).json({message: 'Token no valido'})
         }
 
