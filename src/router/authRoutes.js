@@ -1,9 +1,8 @@
 import { Router } from "express";
+import { createUser } from "../controller/authController.js";
 
-const app = Router()
+const router = Router()
 
-app.get("/", (req, res) => {
-    res.json("Hola")
-})
+router.post("/user", createUser)
 
-export default app
+export default router
