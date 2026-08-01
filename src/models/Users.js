@@ -26,6 +26,14 @@ const User = db.define('user', {
     },
     avatar_user: {
         type: DataTypes.STRING(100)
+    },
+    token_user: {
+        type: DataTypes.STRING(6)
+    },
+    confirmed_user: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false
     }
 })
 

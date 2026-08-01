@@ -1,4 +1,6 @@
 import { User } from "../models/index.js"
+import { hashPassword } from "../utils/auth.js"
+import { generateToken } from "../utils/token.js"
 
 export const createUser = async (req, res) => {
     try {
@@ -11,7 +13,11 @@ export const createUser = async (req, res) => {
         }
 
         const user = new User(req.body)
+        user.password_user = await hashPassword(password_user)
+        user.token_user = generateToken()
         await user.save()
+
+        //TODO: Enviar el correo de confirmacion
 
         res.json('Usuario creado correctamente')
 
