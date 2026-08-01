@@ -5,7 +5,8 @@ const User = db.define('user', {
     id_user: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     name_user: {
         type: DataTypes.STRING(100),
