@@ -20,6 +20,14 @@ const Events = db.define('events', {
         type: DataTypes.TEXT,
         allowNull: true
     },
+    date_event: {
+        type: DataTypes.DATEONLY,
+        allowNull: false
+    },
+    time_event: {
+        type: DataTypes.TIME,
+        allowNull: true
+    },
     status_event: {
         type: DataTypes.BOOLEAN,
         defaultValue: true
