@@ -5,7 +5,8 @@ const Events = db.define('events', {
     id_event: {
         type: DataTypes.BIGINT.UNSIGNED,
         allowNull: false,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     id_user: {
         type: DataTypes.BIGINT.UNSIGNED,
