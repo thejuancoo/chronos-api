@@ -1,5 +1,6 @@
 import { User } from "../models/index.js"
-import { hashPassword } from "../utils/auth.js"
+import { checkPassword, hashPassword } from "../utils/auth.js"
+import { generateTokenJWT } from "../utils/jwt.js"
 import { generateToken } from "../utils/token.js"
 
 export const createUser = async (req, res) => {
@@ -23,6 +24,31 @@ export const createUser = async (req, res) => {
 
     } catch (error) {
         //return res.status(500).json({error: "Ocurrio un error"})
+        console.log(error)
+    }
+}
+
+export const login = async (req, res) => {
+    try {
+        const { password_user, email_user } = req.body
+        
+        const user = await User.findOne({where: {email_user}})
+        if(!user){
+            const error = new Error('El usuario no existe')
+            return res.status(404).json({error: error.message})
+        }
+
+        //TODO: Validar confirmacion de usuario
+        const isPasswordCorrect = await checkPassword(password_user, user.password_user)
+        if(!isPasswordCorrect){
+            const error = new Error('La contraseña no es correcta')
+            return res.status(403).json({error: error.message})
+        }
+
+        const token = generateTokenJWT(user.id_user)
+        res.json(token)
+
+    } catch (error) {
         console.log(error)
     }
 }
