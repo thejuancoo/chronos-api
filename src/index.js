@@ -3,10 +3,15 @@ import { db } from "./config/db.js"
 import "./models/index.js"
 import authRouter from './router/authRoutes.js'
 import eventRouter from './router/eventRoutes.js'
+import cors from "cors"
 
 const app = express()
 
 const PORT = 3000
+
+app.use(cors({
+    origin: "http://localhost:5173"
+}))
 
 app.use(express.json())
 

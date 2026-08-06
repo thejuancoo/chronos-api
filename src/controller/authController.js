@@ -52,3 +52,8 @@ export const login = async (req, res) => {
         console.log(error)
     }
 }
+
+export const profile = (req, res) => {
+    const { user } = req
+    res.json(user)
+}
