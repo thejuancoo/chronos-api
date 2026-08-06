@@ -32,3 +32,13 @@ export const getAllEvents = async (req, res) => {
         console.log(error)
     }
 }
+
+export const getEventById = async (req, res) => {
+    try {
+        const {id_event} = req.params
+        const event = await Events.findOne({where: {id_event}})
+        res.json(event ?? {})
+    } catch (error) {
+        console.log(error)
+    }
+}
