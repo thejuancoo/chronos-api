@@ -8,6 +8,6 @@ router.post("/user", createUser)
 router.post("/login", login)
 
 //Area privadas
-router.post("/profile", checkAuth, profile)
+router.get("/profile", checkAuth, profile)
 
 export default router
