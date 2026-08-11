@@ -1,3 +1,4 @@
+import { where } from "sequelize";
 import { Events } from "../models/index.js";
 import { User } from "../models/index.js"
 
@@ -46,6 +47,7 @@ export const createEvent = async (req, res) => {
             date_event,
             time_event
         })
+        await newEvent.save()
 
         res.status(201).json(newEvent)
     } catch (error) {
@@ -58,6 +60,51 @@ export const getEventById = async (req, res) => {
         const {id_event} = req.params
         const event = await Events.findOne({where: {id_event}})
         res.json(event ?? {})
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const updateEvent = async (req, res) => {
+    try {
+        const {id_event} = req.params
+        const id_user = req.user.id_user
+
+        const { title_event, description_event, date_event, time_event } = req.body
+
+        const [updateRows] = await Events.update(
+            {
+                title_event,
+                description_event,
+                date_event,
+                time_event
+            }, 
+            {
+                where: {
+                    id_event,
+                    id_user
+                }
+            }
+        )
+
+        if(updateRows === 0) {
+            return res.status(404).json({
+                message: 'Ocurrio un error al actualizar'
+            })
+        }
+
+        const updatedEvent = await Events.findOne({
+            where: {
+                id_event,
+                id_user
+            }
+        });
+
+        return res.status(200).json({
+            message: 'Evento actualizado correctamente',
+            event: updatedEvent
+        });
+        
     } catch (error) {
         console.log(error)
     }
