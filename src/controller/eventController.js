@@ -33,6 +33,26 @@ export const getAllEvents = async (req, res) => {
     }
 }
 
+export const createEvent = async (req, res) => {
+    try {
+        const { title_event, description_event, date_event, time_event } = req.body
+
+        const id_user = req.user.id_user
+
+        const newEvent = await Events.create({
+            id_user,
+            title_event,
+            description_event,
+            date_event,
+            time_event
+        })
+
+        res.status(201).json(newEvent)
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const getEventById = async (req, res) => {
     try {
         const {id_event} = req.params
