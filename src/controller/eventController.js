@@ -104,7 +104,26 @@ export const updateEvent = async (req, res) => {
             message: 'Evento actualizado correctamente',
             event: updatedEvent
         });
-        
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const deleteEvent = async (req, res) => {
+    try {
+        const {id_event} = req.params
+        const id_user = req.user.id_user
+
+        const deleteRow = await Events.destroy({where: {id_event, id_user}})
+
+        if(deleteRow === 0) {
+            return res.status(404).json({
+                message: 'No existe el registro a eliminar'
+            })
+        }
+
+        return res.status(200).json({message: "Evento eliminado correctamente"})
     } catch (error) {
         console.log(error)
     }
