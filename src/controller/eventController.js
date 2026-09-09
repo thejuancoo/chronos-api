@@ -22,6 +22,7 @@ export const getAllEvents = async (req, res) => {
                 id: event.id_event,
                 title: event.title_event,
                 description: event.description_event,
+                date: event.date_event,
                 time: event.time_event
             })
 
