@@ -19,11 +19,11 @@ export const getAllEvents = async (req, res) => {
             }
 
             acc[date].push({
-                id: event.id_event,
-                title: event.title_event,
-                description: event.description_event,
-                date: event.date_event,
-                time: event.time_event
+                id_event: event.id_event,
+                title_event: event.title_event,
+                description_event: event.description_event,
+                date_event: event.date_event,
+                time_event: event.time_event
             })
 
             return acc
