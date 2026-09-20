@@ -1,6 +1,4 @@
-import { where } from "sequelize";
 import { Events } from "../models/index.js";
-import { User } from "../models/index.js"
 
 export const getAllEvents = async (req, res) => {
     try {
