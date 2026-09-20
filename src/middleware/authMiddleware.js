@@ -27,8 +27,7 @@ const checkAuth = async (req, res, next) => {
         next()
        
     } catch (error) {
-        //console.log(error)
-        return 
+        return res.status(401).json({message: 'Usuario denegado'})
     }
 }
 
