@@ -57,3 +57,7 @@ export const profile = (req, res) => {
     const { user } = req
     res.json(user)
 }
+
+export const updateProfile = (req, res) => {
+    console.log("Desde editar el perfil del usuario")
+}
