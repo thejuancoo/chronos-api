@@ -10,7 +10,7 @@ const app = express()
 const PORT = 3000
 
 app.use(cors({
-    origin: 'https://chronos.jmcruzo23z.workers.dev/',
+    origin: 'https://chronos.jmcruzo23z.workers.dev',
 }))
 
 app.use(express.json())
