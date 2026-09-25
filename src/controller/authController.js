@@ -2,6 +2,7 @@ import { User } from "../models/index.js"
 import { checkPassword, hashPassword } from "../utils/auth.js"
 import { generateTokenJWT } from "../utils/jwt.js"
 import { generateToken } from "../utils/token.js"
+import { sendConfirmationEmail } from "../config/emailsResend.js"
 
 export const createUser = async (req, res) => {
     try {
@@ -18,7 +19,11 @@ export const createUser = async (req, res) => {
         user.token_user = generateToken()
         await user.save()
 
-        //TODO: Enviar el correo de confirmacion
+        // sendConfirmationEmail({
+        //     email: user.email_user,
+        //     name: user.name_user,
+        //     confirmationToken: user.token_user
+        // })
 
         res.json('Usuario creado correctamente')
 
