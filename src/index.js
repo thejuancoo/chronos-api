@@ -8,10 +8,22 @@ import cors from "cors"
 const app = express()
 
 const PORT = 3000
+const allowedOrigins = [
+    'http://localhost:5173', //DEV
+    'https://chronos.jmcruzo23z.workers.dev'
+]
 
-app.use(cors({
-    origin: 'https://chronos.jmcruzo23z.workers.dev',
-}))
+const corsOptions = {
+    origin: (origin, callback) => {
+        if(!origin || allowedOrigins.includes(origin)){
+            callback(null, true)
+        } else {
+            callback(new Error('No permitido por CORS'))
+        }
+    }
+}
+
+app.use(cors(corsOptions))
 
 app.use(express.json())
 
