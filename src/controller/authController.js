@@ -63,6 +63,44 @@ export const profile = (req, res) => {
     res.json(user)
 }
 
-export const updateProfile = (req, res) => {
-    console.log("Desde editar el perfil del usuario")
-}
+export const updateProfile = async (req, res) => {
+    try {
+        const { id_user, name_user, lastname_user, email_user } = req.user
+        const { name_user: name, lastname_user: lastname, email_user: email } = req.body
+
+        const [updateRows] = await User.update(
+            {
+                name_user: name,
+                lastname_user: lastname,
+                email_user: email
+            }, 
+            {
+                where: {
+                    id_user,
+                    email_user
+                }
+            }
+        )
+
+         if(updateRows === 0) {
+            return res.status(404).json({
+                message: 'Ocurrio un error al actualizar'
+            })
+        }
+
+        await User.findOne({
+            where: {
+                id_user
+            }
+        });
+
+        //TODO: Enviar el correo para confirmar el correo de nuevo (solo si se modifico)
+
+        return res.status(200).json({
+            message: 'Datos actualizados correctamente'
+        });
+
+    } catch (error) {
+        console.log(error)
+    }
+};
