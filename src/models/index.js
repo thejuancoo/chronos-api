@@ -47,5 +47,5 @@ export {
     User,
     Events,
     Notes,
-    
+    Tasks
 }
