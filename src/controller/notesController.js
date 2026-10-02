@@ -38,8 +38,8 @@ export const getAllNotes = async (req, res) => {
 
 export const getNoteById = async (req, res) => {
     try {
-        const id_note = req.params
-        const getNote = await Notes.findOne({where: {id_note}})
+        const { notes_id } = req.params
+        const getNote = await Notes.findOne({where: {notes_id}})
         res.json(getNote ?? {})
     } catch (error) {
         return res.status(500).json({message: "Hubo un error al mostra la notas"})
