@@ -2,7 +2,7 @@ import { Tasks } from "../models/index.js"
 
 export const createTask = async (req, res) => {
     try {
-        const { title_task, content_task, date_task } = req.body
+        const { title_task, description_task, date_task } = req.body
         const id_user = req.user.id_user
 
         if(title_task === "")
@@ -11,7 +11,7 @@ export const createTask = async (req, res) => {
         const newTask = await Tasks.create({
             id_user,
             title_task,
-            content_task,
+            description_task,
             date_task
         })
         await newTask.save()
