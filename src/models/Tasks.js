@@ -29,7 +29,7 @@ const Tasks = db.define('tasks', {
     },
     is_done: {
         type: DataTypes.BOOLEAN,
-        defaultValue: true
+        defaultValue: false
     },
     order_index: {
         type: DataTypes.INTEGER,

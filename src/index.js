@@ -3,6 +3,8 @@ import { db } from "./config/db.js"
 import "./models/index.js"
 import authRouter from './router/authRoutes.js'
 import eventRouter from './router/eventRoutes.js'
+import noteRouter from "./router/notesRoutes.js"
+import taskRouter from "./router/taskRoutes.js"
 import cors from "cors"
 
 const app = express()
@@ -29,6 +31,8 @@ app.use(express.json())
 
 app.use("/v1/auth", authRouter)
 app.use("/v1/events", eventRouter)
+app.use("/v1/notes", noteRouter)
+app.use("/v1/tasks", taskRouter)
 
 try {
     await db.authenticate()
