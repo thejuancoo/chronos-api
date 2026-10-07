@@ -6,8 +6,11 @@ import {
     profile,
     updateProfile
 } from "../controller/authController.js";
+import { limiter } from "../config/limiter.js";
 
 const router = Router()
+
+router.use(limiter)
 
 router.post("/user", createUser)
 router.post("/login", login)
