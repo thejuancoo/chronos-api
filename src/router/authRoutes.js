@@ -4,13 +4,15 @@ import {
     createUser,
     login,
     profile,
-    updateProfile
+    updateProfile,
+    recoveryPassword
 } from "../controller/authController.js";
 
 const router = Router()
 
 router.post("/user", createUser)
 router.post("/login", login)
+router.post("/recovery-password", recoveryPassword)
 
 //Area privadas
 router.get("/profile", checkAuth, profile)

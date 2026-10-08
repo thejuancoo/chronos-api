@@ -104,3 +104,24 @@ export const updateProfile = async (req, res) => {
         console.log(error)
     }
 };
+
+export const recoveryPassword = async (req, res) => {
+    try {
+        const { email_user } = req.body
+
+        const user = await User.findOne({where: { email_user }})
+        if(!user){
+            const error = new Error('El usuario no existe')
+            return res.status(409).json({error: error.message})
+        }
+
+        user.token = generateToken()
+        await user.save()
+
+        //TODO:Enviar el correo para reestablecer el password
+        res.json("Revisa tu correo para instrucciones")
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: "Ocurrio un error"})
+    }
+}
