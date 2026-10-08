@@ -2,6 +2,7 @@ import { User } from "../models/index.js"
 import { checkPassword, hashPassword } from "../utils/auth.js"
 import { generateTokenJWT } from "../utils/jwt.js"
 import { generateToken } from "../utils/token.js"
+import { sendEmailConfirmation } from "../config/emailBrevo.js"
 
 export const createUser = async (req, res) => {
     try {
@@ -18,14 +19,15 @@ export const createUser = async (req, res) => {
         user.token_user = generateToken()
         await user.save()
 
-        // sendConfirmationEmail({
-        //     email: user.email_user,
-        //     name: user.name_user,
-        //     confirmationToken: user.token_user
-        // })
+        sendEmailConfirmation({
+            token: user.token_user,
+            to: {
+                email: user.email_user,
+                name: user.name_user,
+            }
+        })
 
         res.json('Usuario creado correctamente')
-
     } catch (error) {
         //return res.status(500).json({error: "Ocurrio un error"})
         console.log(error)
@@ -35,7 +37,7 @@ export const createUser = async (req, res) => {
 export const login = async (req, res) => {
     try {
         const { password_user, email_user } = req.body
-        
+
         const user = await User.findOne({where: {email_user}})
         if(!user){
             const error = new Error('El usuario no existe')
@@ -72,7 +74,7 @@ export const updateProfile = async (req, res) => {
                 name_user: name,
                 lastname_user: lastname,
                 email_user: email
-            }, 
+            },
             {
                 where: {
                     id_user,
