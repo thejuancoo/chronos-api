@@ -2,7 +2,7 @@ import { User } from "../models/index.js"
 import { checkPassword, hashPassword } from "../utils/auth.js"
 import { generateTokenJWT } from "../utils/jwt.js"
 import { generateToken } from "../utils/token.js"
-import { sendEmailConfirmation } from "../config/emailBrevo.js"
+import { sendEmailConfirmation, sendEmailPasswordReset } from "../config/emailBrevo.js"
 
 export const createUser = async (req, res) => {
     try {
@@ -29,8 +29,27 @@ export const createUser = async (req, res) => {
 
         res.json('Usuario creado correctamente')
     } catch (error) {
-        //return res.status(500).json({error: "Ocurrio un error"})
-        console.log(error)
+        return res.status(500).json({error: "Ocurrio un error al crear al usuario"})
+    }
+}
+
+export const confirmAccount = async (req, res) => {
+    try {
+        const { token } = req.body
+
+        const user = await User.findOne({where: { token }})
+        if(!user){
+            const error = new Error('Token no válido')
+            return res.status(401).json({error: error.message})
+        } 
+
+        user.confirmed = true
+        user.token = null
+        await user.save()
+
+        res.json("Cuenta confirmada correctamente")
+    } catch (error) {
+        return res.status(500).json({error: "Ocurrio un error al confirmar la cuenta"})
     }
 }
 
@@ -55,7 +74,56 @@ export const login = async (req, res) => {
         res.json(token)
 
     } catch (error) {
+        res.status(500).json({error: "Ocurrio un error al ingresar"})
+    }
+}
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email_user } = req.body
+
+        const user = await User.findOne({where: { email_user }})
+        if(!user){
+            const error = new Error("El usuario no existe")
+            return res.status(409).json({error: error.message})
+        }
+
+        user.token = generateToken()
+        await user.save()
+
+        sendEmailPasswordReset({
+            token: user.token_user,
+            to: {
+                email: user.email_user,
+                name: user.name_user,
+            }
+        })
+
+        res.json("Revisa tu correo para instrucciones")
+    } catch (error) {
         console.log(error)
+        return res.status(500).json({error: "Ocurrio un error"})
+    }
+}
+
+export const validateToken = async (req, res) => {
+    try {
+        const { email_user } = req.body
+
+        const user = await User.findOne({where: { email_user }})
+        if(!user){
+            const error = new Error('El usuario no existe')
+            return res.status(409).json({error: error.message})
+        }
+
+        user.token = generateToken()
+        await user.save()
+
+        //TODO:Enviar el correo para reestablecer el password
+        res.json("Revisa tu correo para instrucciones")
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: "Ocurrio un error"})
     }
 }
 
@@ -83,7 +151,7 @@ export const updateProfile = async (req, res) => {
             }
         )
 
-         if(updateRows === 0) {
+        if(updateRows === 0) {
             return res.status(404).json({
                 message: 'Ocurrio un error al actualizar'
             })
@@ -102,7 +170,7 @@ export const updateProfile = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error)
+        res.status(500).json({error: "Ocurrio un error"})
     }
 };
 

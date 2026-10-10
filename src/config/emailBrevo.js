@@ -167,3 +167,228 @@ export const sendEmailConfirmation = async ({ to, token }) => {
         console.error("Error enviando correo de confirmación:", error);
     }
 };
+
+
+export const sendEmailPasswordReset = async ({ to, token }) => {
+    const { email, name } = to;
+
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(token)}`;
+
+    try {
+        await brevoInstance.transactionalEmails.sendTransacEmail({
+            subject: "Restablece tu contraseña - Chronos",
+            sender: {
+                name: "Team Chronos",
+                email: "210373@utxicotepec.edu.mx"
+            },
+            to: [{ email, name }],
+            htmlContent: `
+                <!DOCTYPE html>
+                <html lang="es">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>Restablecer contraseña</title>
+                </head>
+                <body style="
+                    margin: 0;
+                    padding: 0;
+                    background-color: #f4f4f5;
+                    font-family: Arial, Helvetica, sans-serif;
+                ">
+                    <div style="
+                        max-width: 600px;
+                        margin: 40px auto;
+                        background-color: #ffffff;
+                        border-radius: 12px;
+                        overflow: hidden;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                    ">
+
+                        <div style="
+                            background-color: #3131f3;
+                            padding: 30px;
+                            text-align: center;
+                        ">
+                            <h1 style="
+                                margin: 0;
+                                color: #ffffff;
+                                font-size: 28px;
+                            ">
+                                Chronos
+                            </h1>
+                        </div>
+
+                        <div style="
+                            padding: 40px 35px;
+                            color: #27272a;
+                        ">
+
+                            <h2 style="
+                                margin-top: 0;
+                                font-size: 24px;
+                            ">
+                                Restablece tu contraseña
+                            </h2>
+
+                            <p style="
+                                font-size: 16px;
+                                line-height: 1.6;
+                                color: #52525b;
+                            ">
+                                Hola, ${name}.
+                            </p>
+
+                            <p style="
+                                font-size: 16px;
+                                line-height: 1.6;
+                                color: #52525b;
+                            ">
+                                Hemos recibido una solicitud para restablecer
+                                la contraseña de tu cuenta de Chronos.
+                            </p>
+
+                            <p style="
+                                font-size: 16px;
+                                line-height: 1.6;
+                                color: #52525b;
+                            ">
+                                Para continuar, haz clic en el siguiente botón:
+                            </p>
+
+                            <div style="
+                                text-align: center;
+                                margin: 35px 0;
+                            ">
+                                <a href="${resetUrl}"
+                                   style="
+                                    display: inline-block;
+                                    padding: 14px 28px;
+                                    background-color: #2828e0;
+                                    color: #ffffff;
+                                    text-decoration: none;
+                                    font-size: 16px;
+                                    font-weight: bold;
+                                    border-radius: 12px;
+                                ">
+                                    Restablecer mi contraseña
+                                </a>
+                            </div>
+
+                            <p style="
+                                font-size: 15px;
+                                line-height: 1.6;
+                                color: #52525b;
+                                text-align: center;
+                            ">
+                                También puedes ingresar este código
+                                en la página de recuperación:
+                            </p>
+
+                            <div style="
+                                margin: 20px 0;
+                                padding: 20px;
+                                background-color: #f4f4f5;
+                                border: 1px solid #e4e4e7;
+                                border-radius: 12px;
+                                text-align: center;
+                            ">
+                                <p style="
+                                    margin: 0 0 8px;
+                                    font-size: 12px;
+                                    color: #71717a;
+                                    text-transform: uppercase;
+                                    letter-spacing: 2px;
+                                ">
+                                    Código de recuperación
+                                </p>
+
+                                <p style="
+                                    margin: 0;
+                                    font-size: 26px;
+                                    font-weight: bold;
+                                    letter-spacing: 5px;
+                                    color: #2323d4;
+                                    word-break: break-all;
+                                ">
+                                    ${token}
+                                </p>
+                            </div>
+
+                            <p style="
+                                font-size: 14px;
+                                line-height: 1.6;
+                                color: #71717a;
+                            ">
+                                Si el botón no funciona, copia y pega
+                                el siguiente enlace en tu navegador:
+                            </p>
+
+                            <p style="
+                                font-size: 13px;
+                                line-height: 1.6;
+                                word-break: break-all;
+                                color: #52525b;
+                            ">
+                                <a href="${resetUrl}"
+                                   style="color: #52525b;">
+                                    ${resetUrl}
+                                </a>
+                            </p>
+
+                            <p style="
+                                margin-top: 30px;
+                                font-size: 14px;
+                                line-height: 1.6;
+                                color: #71717a;
+                            ">
+                                Si no solicitaste restablecer tu contraseña,
+                                puedes ignorar este correo. Tu contraseña
+                                no cambiará mientras no completes el proceso.
+                            </p>
+
+                        </div>
+
+                        <div style="
+                            padding: 20px;
+                            background-color: #fafafa;
+                            text-align: center;
+                            border-top: 1px solid #e4e4e7;
+                        ">
+                            <p style="
+                                margin: 0;
+                                font-size: 12px;
+                                color: #a1a1aa;
+                            ">
+                                © ${new Date().getFullYear()} Chronos.
+                                Todos los derechos reservados.
+                            </p>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `,
+
+            textContent: `
+                Hola ${name},
+
+                Hemos recibido una solicitud para restablecer la contraseña
+                de tu cuenta de Chronos.
+
+                Visita el siguiente enlace para continuar:
+                ${resetUrl}
+
+                Tu código de recuperación es:
+                ${token}
+
+                Si no solicitaste este cambio, puedes ignorar este correo.
+
+                © ${new Date().getFullYear()} Chronos.
+            `
+        });
+
+    } catch (error) {
+        console.error("Error enviando correo de recuperación de contraseña:", error);
+        throw error;
+    }
+};
