@@ -2,6 +2,7 @@ import { User } from "../models/index.js"
 import { checkPassword, hashPassword } from "../utils/auth.js"
 import { generateTokenJWT } from "../utils/jwt.js"
 import { generateToken } from "../utils/token.js"
+import { sendEmailConfirmation, sendEmailPasswordReset } from "../config/emailBrevo.js"
 
 export const createUser = async (req, res) => {
     try {
@@ -18,24 +19,44 @@ export const createUser = async (req, res) => {
         user.token_user = generateToken()
         await user.save()
 
-        // sendConfirmationEmail({
-        //     email: user.email_user,
-        //     name: user.name_user,
-        //     confirmationToken: user.token_user
-        // })
+        sendEmailConfirmation({
+            token: user.token_user,
+            to: {
+                email: user.email_user,
+                name: user.name_user,
+            }
+        })
 
         res.json('Usuario creado correctamente')
-
     } catch (error) {
-        //return res.status(500).json({error: "Ocurrio un error"})
-        console.log(error)
+        return res.status(500).json({error: "Ocurrio un error al crear al usuario"})
+    }
+}
+
+export const confirmAccount = async (req, res) => {
+    try {
+        const { token } = req.body
+
+        const user = await User.findOne({where: { token }})
+        if(!user){
+            const error = new Error('Token no válido')
+            return res.status(401).json({error: error.message})
+        } 
+
+        user.confirmed = true
+        user.token = null
+        await user.save()
+
+        res.json("Cuenta confirmada correctamente")
+    } catch (error) {
+        return res.status(500).json({error: "Ocurrio un error al confirmar la cuenta"})
     }
 }
 
 export const login = async (req, res) => {
     try {
         const { password_user, email_user } = req.body
-        
+
         const user = await User.findOne({where: {email_user}})
         if(!user){
             const error = new Error('El usuario no existe')
@@ -53,7 +74,52 @@ export const login = async (req, res) => {
         res.json(token)
 
     } catch (error) {
+        res.status(500).json({error: "Ocurrio un error al ingresar"})
+    }
+}
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email_user } = req.body
+
+        const user = await User.findOne({where: { email_user }})
+        if(!user){
+            const error = new Error("El usuario no existe")
+            return res.status(409).json({error: error.message})
+        }
+
+        user.token = generateToken()
+        await user.save()
+
+        sendEmailPasswordReset({
+            token: user.token_user,
+            to: {
+                email: user.email_user,
+                name: user.name_user,
+            }
+        })
+
+        res.json("Revisa tu correo para instrucciones")
+    } catch (error) {
         console.log(error)
+        return res.status(500).json({error: "Ocurrio un error"})
+    }
+}
+
+export const validateToken = async (req, res) => {
+    try {
+        const { token } = req.body
+
+        const tokenExists = await User.findOne({where: { token }})
+        if(!tokenExists){
+             const error = new Error('Token no válido')
+                return res.status(404).json({error: error.message})
+        }
+
+        res.json('Token válido')
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: "Ocurrio un error"})
     }
 }
 
@@ -72,7 +138,7 @@ export const updateProfile = async (req, res) => {
                 name_user: name,
                 lastname_user: lastname,
                 email_user: email
-            }, 
+            },
             {
                 where: {
                     id_user,
@@ -81,7 +147,7 @@ export const updateProfile = async (req, res) => {
             }
         )
 
-         if(updateRows === 0) {
+        if(updateRows === 0) {
             return res.status(404).json({
                 message: 'Ocurrio un error al actualizar'
             })
@@ -100,25 +166,27 @@ export const updateProfile = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error)
+        res.status(500).json({error: "Ocurrio un error"})
     }
 };
 
 export const recoveryPassword = async (req, res) => {
     try {
-        const { email_user } = req.body
+        const { token } = req.params
+        const { password } = req.body
 
-        const user = await User.findOne({where: { email_user }})
-        if(!user){
-            const error = new Error('El usuario no existe')
-            return res.status(409).json({error: error.message})
+        const user = await User.findOne({where: {token}})
+        if(!user) {
+            const error = new Error('Token no válido')
+            return res.status(404).json({error: error.message})
         }
 
-        user.token = generateToken()
+        //Actualizar contraseña
+        user.password = await hashPassword(password)
+        user.token = null
         await user.save()
-
-        //TODO:Enviar el correo para reestablecer el password
-        res.json("Revisa tu correo para instrucciones")
+        
+        res.json('La contraseña se actualizo correctamente')
     } catch (error) {
         console.log(error)
         return res.status(500).json({error: "Ocurrio un error"})
