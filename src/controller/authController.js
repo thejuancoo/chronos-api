@@ -108,19 +108,15 @@ export const forgotPassword = async (req, res) => {
 
 export const validateToken = async (req, res) => {
     try {
-        const { email_user } = req.body
+        const { token } = req.body
 
-        const user = await User.findOne({where: { email_user }})
-        if(!user){
-            const error = new Error('El usuario no existe')
-            return res.status(409).json({error: error.message})
+        const tokenExists = await User.findOne({where: { token }})
+        if(!tokenExists){
+             const error = new Error('Token no válido')
+                return res.status(404).json({error: error.message})
         }
 
-        user.token = generateToken()
-        await user.save()
-
-        //TODO:Enviar el correo para reestablecer el password
-        res.json("Revisa tu correo para instrucciones")
+        res.json('Token válido')
     } catch (error) {
         console.log(error)
         return res.status(500).json({error: "Ocurrio un error"})
@@ -176,19 +172,21 @@ export const updateProfile = async (req, res) => {
 
 export const recoveryPassword = async (req, res) => {
     try {
-        const { email_user } = req.body
+        const { token } = req.params
+        const { password } = req.body
 
-        const user = await User.findOne({where: { email_user }})
-        if(!user){
-            const error = new Error('El usuario no existe')
-            return res.status(409).json({error: error.message})
+        const user = await User.findOne({where: {token}})
+        if(!user) {
+            const error = new Error('Token no válido')
+            return res.status(404).json({error: error.message})
         }
 
-        user.token = generateToken()
+        //Actualizar contraseña
+        user.password = await hashPassword(password)
+        user.token = null
         await user.save()
-
-        //TODO:Enviar el correo para reestablecer el password
-        res.json("Revisa tu correo para instrucciones")
+        
+        res.json('La contraseña se actualizo correctamente')
     } catch (error) {
         console.log(error)
         return res.status(500).json({error: "Ocurrio un error"})
