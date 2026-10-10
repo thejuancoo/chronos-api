@@ -172,7 +172,7 @@ export const sendEmailConfirmation = async ({ to, token }) => {
 export const sendEmailPasswordReset = async ({ to, token }) => {
     const { email, name } = to;
 
-    const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${encodeURIComponent(token)}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/auth/reset-password?token=${encodeURIComponent(token)}`;
 
     try {
         await brevoInstance.transactionalEmails.sendTransacEmail({
