@@ -39,8 +39,8 @@ export const getAllTasks = async (req, res) => {
 
 export const getTaskById = async (req, res) => {
     try {
-        const { tasks_id } = req.params
-        const getTask = await Tasks.findOne({where: {tasks_id}})
+        const { id_task } = req.params
+        const getTask = await Tasks.findOne({where: {id_task}})
         res.json(getTask ?? {})
     } catch (error) {
         return res.status(500).json({message: "Hubo un error al mostra la tarea"})
@@ -49,7 +49,7 @@ export const getTaskById = async (req, res) => {
 
 export const updateTask = async (req, res) => {
     try {
-        const { tasks_id } = req.params
+        const { id_task } = req.params
         const id_user = req.user.id_user
 
         const { title_task, content_task, date_task } = req.body
@@ -61,7 +61,7 @@ export const updateTask = async (req, res) => {
             }, 
             {
                 where: {
-                    tasks_id,
+                    id_task,
                     id_user
                 }
             }
@@ -75,7 +75,7 @@ export const updateTask = async (req, res) => {
 
         const updatedTask = await Tasks.findOne({
             where: {
-                tasks_id,
+                id_task,
                 id_user
             }
         });
@@ -93,10 +93,10 @@ export const updateTask = async (req, res) => {
 
 export const deleteTask = async (req, res) => {
     try {
-        const { tasks_id } = req.params
+        const { id_task } = req.params
         const id_user = req.user.id_user
 
-        const deleteRow = await Tasks.destroy({where: {tasks_id, id_user}})
+        const deleteRow = await Tasks.destroy({where: {id_task, id_user}})
 
         if(deleteRow === 0) {
             return res.status(404).json({

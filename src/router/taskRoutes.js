@@ -12,9 +12,9 @@ const router = Router()
 
 router.post("/", checkAuth, createTask)
 router.get("/", checkAuth, getAllTasks)
-router.get("/:task_id", checkAuth, getTaskById)
-router.put("/:task_id", checkAuth, updateTask)
-router.delete("/:task_id", checkAuth, deleteTask)
+router.get("/:id_task", checkAuth, getTaskById)
+router.put("/:id_task", checkAuth, updateTask)
+router.delete("/:id_task", checkAuth, deleteTask)
 
 
 export default router
