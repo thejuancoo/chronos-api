@@ -96,7 +96,6 @@ export const updateToggleTaskDone = async (req, res) => {
         const updates = req.body
 
         const task = await Tasks.findByPk(id_task)
-        console.log(task)
         if(!task){
             return res.status(404).json({message: "No existe la tarea"})
         }
