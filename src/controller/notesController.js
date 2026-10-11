@@ -79,7 +79,7 @@ export const updateNote = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: 'Evento actualizado correctamente',
+            message: 'Nota actualizado correctamente',
             event: updatedNote
         });
 
