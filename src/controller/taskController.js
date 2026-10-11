@@ -1,4 +1,4 @@
-import { Tasks } from "../models/index.js"
+import { Tasks, User } from "../models/index.js"
 
 export const createTask = async (req, res) => {
     try {
@@ -86,8 +86,25 @@ export const updateTask = async (req, res) => {
         });
 
     } catch (error) {
-        console.log(error)
         return res.status(400).json({message: "Hubo un error al actualizar la tarea"})
+    }
+}
+
+export const updateToggleTaskDone = async (req, res) => {
+    try {
+        const { id_task } = req.params
+        const updates = req.body
+
+        const task = await Tasks.findByPk(id_task)
+        console.log(task)
+        if(!task){
+            return res.status(404).json({message: "No existe la tarea"})
+        }
+        await task.update(updates);
+
+        return res.json(task);
+    } catch (error) {
+        return res.status(500).json({message: "Hubo un error al actualizar la tarea"})
     }
 }
 
@@ -106,6 +123,6 @@ export const deleteTask = async (req, res) => {
 
         return res.status(200).json({message: "Tarea eliminada correctamente"})
     } catch (error) {
-        console.log(error)
+        return res.status(400).json({message: "Hubo un error al eliminar la tarea"})
     }
 }

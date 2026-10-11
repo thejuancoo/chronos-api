@@ -14,7 +14,7 @@ import { limiter } from "../config/limiter.js";
 
 const router = Router()
 
-router.use(limiter)
+//router.use(limiter)
 
 router.post("/user", createUser)
 router.post("/confirm-account", confirmAccount)
