@@ -5,6 +5,7 @@ import authRouter from './router/authRoutes.js'
 import eventRouter from './router/eventRoutes.js'
 import noteRouter from "./router/notesRoutes.js"
 import taskRouter from "./router/taskRoutes.js"
+import portfolioRouter from "./router/portfolioRoutes.js"
 import cors from "cors"
 
 const app = express()
@@ -33,6 +34,7 @@ app.use("/v1/auth", authRouter)
 app.use("/v1/events", eventRouter)
 app.use("/v1/notes", noteRouter)
 app.use("/v1/tasks", taskRouter)
+app.use("/v1/portfolios", portfolioRouter)
 
 try {
     await db.authenticate()

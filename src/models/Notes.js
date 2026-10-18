@@ -15,6 +15,9 @@ const notes = db.define("notes", {
     id_event: {
         type: DataTypes.BIGINT.UNSIGNED
     },
+    id_portfolio: {
+        type: DataTypes.BIGINT.UNSIGNED
+    },
     id_task: {
         type: DataTypes.BIGINT.UNSIGNED
     },
