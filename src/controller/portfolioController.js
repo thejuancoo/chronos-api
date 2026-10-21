@@ -36,6 +36,40 @@ export const getAllPortfolios = async (req, res) => {
     }
 }
 
+export const getPortfoliosWithNotes = async (req, res) => {
+    try {
+        const { id_portfolio } = req.params
+
+        const getPortfoliosAndNotes = await Portfolios.findAll({
+            attributes: [
+                "id_portfolio",
+                "title_portfolio",
+                "createdAt",
+                "updatedAt"
+            ],
+            include: [
+                {
+                    association: "notes",
+                    attributes: [
+                        "notes_id",
+                        "title_note",
+                        "content_note"
+                    ],
+                    required: false
+                }
+            ],
+            where: {
+                id_user: req.user.id_user,
+                ...(id_portfolio && { id_portfolio })
+            }
+        })
+
+        res.json(getPortfoliosAndNotes)
+    } catch (error) {
+        return res.status(500).json({message: "Hubo un error al mostra las notas"})
+    }
+}
+
 export const getPortfolioById = async (req, res) => {
     try {
         const { Portfolios_id } = req.params
