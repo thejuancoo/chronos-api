@@ -72,8 +72,8 @@ export const getPortfoliosWithNotes = async (req, res) => {
 
 export const getPortfolioById = async (req, res) => {
     try {
-        const { Portfolios_id } = req.params
-        const getNote = await Portfolios.findOne({where: {Portfolios_id}})
+        const { id_portfolio } = req.params
+        const getNote = await Portfolios.findOne({where: {id_portfolio}})
         res.json(getNote ?? {})
     } catch (error) {
         return res.status(500).json({message: "Hubo un error al mostra la notas"})
@@ -82,7 +82,7 @@ export const getPortfolioById = async (req, res) => {
 
 export const updatePortfolio = async (req, res) => {
     try {
-        const { Portfolios_id } = req.params
+        const { id_portfolio } = req.params
         const id_user = req.user.id_user
 
         const { title_portfolio, description_portfolio } = req.body
@@ -93,7 +93,7 @@ export const updatePortfolio = async (req, res) => {
             }, 
             {
                 where: {
-                    Portfolios_id,
+                    id_portfolio,
                     id_user
                 }
             }
@@ -107,7 +107,7 @@ export const updatePortfolio = async (req, res) => {
 
         const updatedNote = await Portfolios.findOne({
             where: {
-                Portfolios_id,
+                id_portfolio,
                 id_user
             }
         });
@@ -125,10 +125,10 @@ export const updatePortfolio = async (req, res) => {
 
 export const deletePortfolio = async (req, res) => {
     try {
-        const { portfolios_id } = req.params
+        const { id_portfolio } = req.params
         const id_user = req.user.id_user
 
-        const deleteRow = await Portfolios.destroy({where: {portfolios_id, id_user}})
+        const deleteRow = await Portfolios.destroy({where: {id_portfolio, id_user}})
 
         if(deleteRow === 0) {
             return res.status(404).json({
@@ -136,7 +136,7 @@ export const deletePortfolio = async (req, res) => {
             })
         }
 
-        return res.status(200).json({message: "Nota eliminada correctamente"})
+        return res.status(200).json({message: "Portafolio eliminado correctamente"})
     } catch (error) {
         console.log(error)
     }
