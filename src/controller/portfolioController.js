@@ -165,7 +165,10 @@ export const createNoteInPortfolio = async (req, res) => {
         })
         await newNote.save()
 
-        res.status(201).json(newNote)
+        res.status(201).json({
+            message: "Nota creada correctamente",
+            data: newNote
+        })
     } catch (error) {
         return res.status(400).json({message: "Hubo un error al crear la nota"})
     }
