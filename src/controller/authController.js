@@ -192,3 +192,31 @@ export const recoveryPassword = async (req, res) => {
         return res.status(500).json({error: "Ocurrio un error"})
     }
 }
+
+export const updateCurrentPassword = async (req, res) => {
+try {
+        const { current_password, new_password } = req.body
+        const { id_user } = req.user
+
+        const user = await User.findByPk(id_user)
+        if(!user) {
+            const error = new Error('Usuario no válido')
+            return res.status(404).json({error: error.message})
+        }
+
+        //Actualizar contraseña
+        const isPasswordCorrect = await checkPassword(current_password, user.password_user)
+        if(!isPasswordCorrect) {
+            const error = new Error('La contraseña no es correcta')
+            return res.status(404).json({error: error.message})
+        }
+
+        user.password_user = await hashPassword(new_password)
+        await user.save()
+        
+        res.json('La contraseña se actualizo correctamente')
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: "Ocurrio un error"})
+    }
+}

@@ -1,4 +1,4 @@
-import { Portfolios } from "../models/index.js";
+import { Portfolios, Notes } from "../models/index.js";
 
 export const createPortfolio = async (req, res) => {
     try {
@@ -139,5 +139,37 @@ export const deletePortfolio = async (req, res) => {
         return res.status(200).json({message: "Portafolio eliminado correctamente"})
     } catch (error) {
         console.log(error)
+    }
+}
+
+
+export const createNoteInPortfolio = async (req, res) => {
+    try {
+        const { title_note, content_note } = req.body
+        const id_user = req.user.id_user
+        const { id_portfolio } = req.params
+
+        if(title_note === "")
+            return res.status(500).json({message: "El titulo es obligatorio"})
+
+        if(!id_portfolio){
+            const error = new Error("El portafolio no existe")
+            return res.status(500).json({message: error.message})
+        }
+
+        const newNote = await Notes.create({
+            id_user,
+            title_note,
+            content_note,
+            id_portfolio
+        })
+        await newNote.save()
+
+        res.status(201).json({
+            message: "Nota creada correctamente",
+            data: newNote
+        })
+    } catch (error) {
+        return res.status(400).json({message: "Hubo un error al crear la nota"})
     }
 }

@@ -6,7 +6,8 @@ import {
     getPortfolioById,
     updatePortfolio,
     deletePortfolio,
-    getPortfoliosWithNotes
+    getPortfoliosWithNotes,
+    createNoteInPortfolio
 } from "../controller/portfolioController.js";
 
 const router = Router()
@@ -17,5 +18,7 @@ router.get("/:id_portfolio", checkAuth, getPortfolioById)
 router.put("/:id_portfolio", checkAuth, updatePortfolio)
 router.delete("/:id_portfolio", checkAuth, deletePortfolio)
 router.get("/:id_portfolio/notes", checkAuth, getPortfoliosWithNotes)
+
+router.post("/:id_portfolio/notes", checkAuth, createNoteInPortfolio)
 
 export default router

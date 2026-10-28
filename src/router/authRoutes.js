@@ -8,7 +8,8 @@ import {
     validateToken,
     profile,
     updateProfile,
-    recoveryPassword
+    recoveryPassword,
+    updateCurrentPassword
 } from "../controller/authController.js";
 import { limiter } from "../config/limiter.js";
 
@@ -26,6 +27,6 @@ router.post("/recovery-password/:token", recoveryPassword)
 //Area privadas
 router.get("/profile", checkAuth, profile)
 router.post("/profile", checkAuth, updateProfile)
-router.post("/updatePassword", checkAuth)
+router.post("/update-password", checkAuth, updateCurrentPassword)
 
 export default router
